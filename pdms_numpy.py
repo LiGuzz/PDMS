@@ -12,10 +12,10 @@ trimap_file_name = 'trimap.png'
 split_step = 10000
 
 if len(sys.argv) >=3:
-    raw_file_name = argv[1]
-    trimap_file_name = argv[2]
+    raw_file_name = sys.argv[1]
+    trimap_file_name = sys.argv[2]
 if len(sys.argv) >= 4:
-    split_step = int(argv[3])
+    split_step = int(sys.argv[3])
 
 '''
 # pytorch version
