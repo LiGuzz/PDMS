@@ -5,14 +5,17 @@ from evaluate_samples import evaluate_samples
 from tqdm import tqdm
 import sys
 
-assert len(sys.argv) ==3 or len(sys.argv) ==1
+assert len(sys.argv) ==4 or len(sys.argv) ==3 or len(sys.argv) ==1
 
 raw_file_name = 'GT13.png'
 trimap_file_name = 'trimap.png'
+split_step = 10000
 
-if len(sys.argv) ==3:
+if len(sys.argv) >=3:
     raw_file_name = argv[1]
     trimap_file_name = argv[2]
+if len(sys.argv) >= 4:
+    split_step = int(argv[3])
 
 '''
 # pytorch version
@@ -86,7 +89,7 @@ raw_img = cv2.imread(raw_file_name)
 trimap = cv2.imread(trimap_file_name,0)
 alpha = trimap.copy()
 
-split_step = 10000
+
 U_corrdinate_union = np.array_split(np.array(np.where(trimap == 128)), split_step, axis = 1)
 F_corrdinate = np.array(np.where(trimap == 255))
 B_corrdinate = np.array(np.where(trimap == 0))
