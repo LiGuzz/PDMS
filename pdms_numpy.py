@@ -90,27 +90,27 @@ trimap = cv2.imread(trimap_file_name,0)
 alpha = trimap.copy()
 
 
-U_corrdinate_union = np.array_split(np.array(np.where(trimap == 128)), split_step, axis = 1)
-F_corrdinate = np.array(np.where(trimap == 255))
-B_corrdinate = np.array(np.where(trimap == 0))
-F_color = raw_img[F_corrdinate[0],F_corrdinate[1]]
-B_color = raw_img[B_corrdinate[0],B_corrdinate[1]]
+U_coordinate_union = np.array_split(np.array(np.where(trimap == 128)), split_step, axis = 1)
+F_coordinate = np.array(np.where(trimap == 255))
+B_coordinate = np.array(np.where(trimap == 0))
+F_color = raw_img[F_coordinate[0],F_coordinate[1]]
+B_color = raw_img[B_coordinate[0],B_coordinate[1]]
 
-for U_corrdinate in tqdm(U_corrdinate_union):
-    U_color = raw_img[U_corrdinate[0],U_corrdinate[1]]
+for U_coordinate in tqdm(U_coordinate_union):
+    U_color = raw_img[U_coordinate[0],U_coordinate[1]]
   
-    spatial_cost_UF = euclidean_dist(U_corrdinate.T, F_corrdinate.T) # [step * nrof_front]
+    spatial_cost_UF = euclidean_dist(U_coordinate.T, F_coordinate.T) # [step * nrof_front]
     color_cost_UF = euclidean_dist(U_color, F_color)
     pareto_F_Bw, nrof_pareto_F_solution = FDMO(spatial_cost_UF, color_cost_UF) # [step * nrof_front] , nrof_pareto_solution list
 
-    spatial_cost_UB = euclidean_dist(U_corrdinate.T, B_corrdinate.T) # [step]
+    spatial_cost_UB = euclidean_dist(U_coordinate.T, B_coordinate.T) # [step]
     color_cost_UB = euclidean_dist(U_color, B_color)
     pareto_B_Bw, nrof_pareto_B_solution = FDMO(spatial_cost_UB, color_cost_UB) # [step * nrof_Background] , nrof_pareto_solution list
 
     U_alpha = evaluate_samples(pareto_F_Bw, nrof_pareto_F_solution, pareto_B_Bw, nrof_pareto_B_solution, spatial_cost_UF,
                            spatial_cost_UB, F_color, B_color, U_color)
 
-    alpha[U_corrdinate[0], U_corrdinate[1]] = U_alpha*255
+    alpha[U_coordinate[0], U_coordinate[1]] = U_alpha*255
 
 cv2.imwrite('matte_' + raw_file_name, alpha)
 print("matting finish!")
